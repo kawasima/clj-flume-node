@@ -29,9 +29,9 @@ public class ClojureSink extends AbstractSink implements Configurable {
 
   private CounterGroup counterGroup;
   private Var configureFunc;
-  private Var startFunc;
-  private Var stopFunc;
-  private Var processFunc;
+  private IFn startFunc;
+  private IFn stopFunc;
+  private IFn processFunc;
 
   public ClojureSink() {
     counterGroup = new CounterGroup();
@@ -49,9 +49,9 @@ public class ClojureSink extends AbstractSink implements Configurable {
     Object sink = sinkVar.get();
 
     Var getFunc = RT.var("clojure.core", "get");
-    IFn startFunc   = (IFn) getFunc.invoke(sink, Keyword.intern("start"));
-    IFn stopFunc    = (IFn) getFunc.invoke(sink, Keyword.intern("stop"));
-    IFn processFunc = (IFn) getFunc.invoke(sink, Keyword.intern("process"));
+    startFunc   = (IFn) getFunc.invoke(sink, Keyword.intern("start"));
+    stopFunc    = (IFn) getFunc.invoke(sink, Keyword.intern("stop"));
+    processFunc = (IFn) getFunc.invoke(sink, Keyword.intern("process"));
     Preconditions.checkState(processFunc != null, "No :process function");
   }
 

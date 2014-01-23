@@ -8,13 +8,25 @@
 
 (def ^:dynamic *config*)
 (defmacro source [n & components]
-  `[:sources ~n (hash-map ~@components)])
+  (let [cs (apply hash-map components)
+        source-type (cs :type)]
+    (if (.contains source-type "/")
+      [:sources n (-> cs
+                    (assoc :type "net.unit8.flume_node.ClojureSource")
+                    (assoc :nsname source-type))]
+      [:sources n cs])))
 
-(defmacro sink [n & components]
-  `[:sinks ~n (hash-map ~@components)])
+(defn sink [n & components]
+  (let [cs (apply hash-map components)
+        sink-type (cs :type)]
+    (if (.contains sink-type "/")
+      [:sinks n (-> cs
+                    (assoc :type "net.unit8.flume_node.ClojureSink")
+                    (assoc :nsname sink-type))]
+      [:sinks n cs])))
 
-(defmacro channel [n & components]
-  `[:channels ~n (hash-map ~@components)])
+(defn channel [n & components]
+  [:channels n (apply hash-map components)])
 
 
 (defmacro defagent [agt & body]
@@ -27,6 +39,9 @@
 
 (defmacro defsink [sink-name & body]
   `(def ~sink-name (hash-map ~@body)))
+
+(defmacro defsource [source-name & body]
+  `(def ~source-name (hash-map ~@body)))
 
 (defn convert-config-map!
   ([config-map form ks]
