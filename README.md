@@ -59,7 +59,7 @@ Call `make-application` to start flume node.
              (EventBuilder/withBody (.getBytes msg))))
 ```
 
-Then you can use `[namespace]/[sink name]` and `[namespace]/[source name]` in :type section.
+Then you can use `[namespace]/[sink name]` and `[namespace]/[source name]` in :type section instead of the java class name.
 
 ```clojure
 (defagent
