@@ -48,7 +48,7 @@
    (cond
     (map? form) (doall (map #(convert-config-map! config-map (second %) (conj ks (first %))) form))
     :else (.put config-map
-                (clojure.string/join "." (map name ks))
+                (string/join "." (map name ks))
                 (cond (keyword? form) (name form)
                       :else (str form)))))
   ([config-map form] (convert-config-map! config-map form [])))
